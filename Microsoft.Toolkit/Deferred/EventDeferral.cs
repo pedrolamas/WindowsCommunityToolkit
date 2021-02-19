@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,17 +27,7 @@ namespace Microsoft.Toolkit.Deferred
         /// </summary>
         public void Complete() => _taskCompletionSource.TrySetResult(null);
 
-        /// <summary>
-        /// Waits for the <see cref="EventDeferral"/> to be completed by the event handler.
-        /// </summary>
-        /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
-        /// <returns><see cref="Task"/>.</returns>
-#if !NETSTANDARD1_4
-        [Browsable(false)]
-#endif
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This is an internal only method to be used by EventHandler extension classes, public callers should call GetDeferral() instead on the DeferredEventArgs.")]
-        public async Task WaitForCompletion(CancellationToken cancellationToken)
+        internal async Task WaitForCompletion(CancellationToken cancellationToken)
         {
             using (cancellationToken.Register(() => _taskCompletionSource.TrySetCanceled()))
             {
